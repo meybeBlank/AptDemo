@@ -31,14 +31,12 @@ import javax.tools.JavaFileObject;
 @AutoService(Processor.class)
 public class BindViewProcessor extends AbstractProcessor {
 
-    private Messager mMessager;
     private Elements mElementUtils;
     private Map<String, AClassCreatorProxy> mProxyMap = new HashMap<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        mMessager = processingEnv.getMessager();
         mElementUtils = processingEnv.getElementUtils();
     }
 
@@ -63,7 +61,6 @@ public class BindViewProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         //根据注解生成Java文件
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "processing...");
         mProxyMap.clear();
         //得到所有的注解
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(BindView.class);
@@ -84,14 +81,12 @@ public class BindViewProcessor extends AbstractProcessor {
 //        for (String key : mProxyMap.keySet()) {
 //            ClassCreatorProxy proxyInfo = mProxyMap.get(key);
 //            try {
-//                mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + proxyInfo.getProxyClassFullName());
 //                JavaFileObject jfo = processingEnv.getFiler().createSourceFile(proxyInfo.getProxyClassFullName(), proxyInfo.getTypeElement());
 //                Writer writer = jfo.openWriter();
 //                writer.write(proxyInfo.generateJavaCode());
 //                writer.flush();
 //                writer.close();
 //            } catch (IOException e) {
-//                mMessager.printMessage(Diagnostic.Kind.NOTE, " --> create " + proxyInfo.getProxyClassFullName() + "error");
 //            }
 //        }
         for (String key : mProxyMap.keySet()) {
@@ -105,7 +100,6 @@ public class BindViewProcessor extends AbstractProcessor {
             }
         }
 
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "process finish ...");
         return true;
     }
 }
